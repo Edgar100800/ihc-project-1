@@ -5,7 +5,7 @@ import ListMedia from "@/components/dashboard/SidePanel/ListMedia";
 import LogOutButtom from "@/components/dashboard/SidePanel/LogOutButtom";
 
 import MediaDescription from "@/components/dashboard/MainPanel/MediaDescription";
-
+import UploadImage from "@/components/dashboard/MainPanel/UploadImage";
 export default function Dashboard() {
 
   return (
@@ -28,9 +28,9 @@ export default function Dashboard() {
       </div>
 
       {/* Main content area */}
-      <div className="flex-1 p-8 overflow-auto">
+      <div className="flex-1 p-8 overflow-auto ">
         <MediaDescription />
-        <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+        <UploadImage />
         <p className="text-gray-600">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
