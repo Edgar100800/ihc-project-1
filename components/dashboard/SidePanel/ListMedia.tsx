@@ -18,7 +18,7 @@ const handleGetMedia = async (): Promise<SmallMedia[]> => {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/media/userid?id=${userid}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/media/${userid}`,
       {
         method: "GET",
         headers: {
