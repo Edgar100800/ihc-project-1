@@ -6,11 +6,11 @@ interface QRCodeGeneratorProps {
 }
 
 const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ value }) => {
-  const qrRef = useRef<SVGSVGElement>(null);
+  const qrWrapperRef = useRef<HTMLDivElement>(null);
 
   const downloadQRCode = () => {
-    if (qrRef.current) {
-      const svg = qrRef.current;
+    const svg = qrWrapperRef.current?.querySelector('svg');
+    if (svg) {
       const svgData = new XMLSerializer().serializeToString(svg);
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
@@ -32,7 +32,9 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ value }) => {
   return (
     <div>
       <h2 className="text-xl font-semibold mb-2">QR Code:</h2>
-      <QRCode value={value} size={256} ref={qrRef} />
+      <div ref={qrWrapperRef}>
+        <QRCode value={value} size={256} />
+      </div>
       <button
         onClick={downloadQRCode}
         className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
