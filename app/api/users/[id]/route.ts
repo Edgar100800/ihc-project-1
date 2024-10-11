@@ -18,19 +18,19 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
-  try {
-    const { username } = await request.json();
-    const updatedUser = await prisma.user.update({
-      where: { id: params.id },
-      data: { username },
-    });
-    return NextResponse.json(updatedUser);
-  } catch (error) {
-    console.error('Error updating user:', error);
-    return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });
-  }
-}
+// export async function PUT(request: Request, { params }: { params: { id: string } }) {
+//   try {
+//     const { username } = await request.json();
+//     const updatedUser = await prisma.user.update({
+//       where: { id: params.id },
+//       data: { username },
+//     });
+//     return NextResponse.json(updatedUser);
+//   } catch (error) {
+//     console.error('Error updating user:', error);
+//     return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });
+//   }
+// }
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
