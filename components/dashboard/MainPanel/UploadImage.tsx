@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Upload } from "lucide-react"
 
-function UploadImage() {
+function UploadImageContent() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null)
   const [file, setFile] = useState<File | null>(null)
   const searchParams = useSearchParams()
@@ -102,6 +102,14 @@ function UploadImage() {
         </div>
       )}
     </div>
+  )
+}
+
+function UploadImage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <UploadImageContent />
+    </Suspense>
   )
 }
 
