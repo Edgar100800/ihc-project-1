@@ -37,7 +37,7 @@ function UploadImage() {
         reader.readAsDataURL(file)
       })
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/images`, {
+      const response = await fetch(`/api/images`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

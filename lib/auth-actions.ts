@@ -48,7 +48,7 @@ export async function signup(formData: FormData) {
   if (error) {
     redirect("/error");
   } else if (userData.user) {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
+    const response = await fetch(`/api/users`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ export async function signInWithGoogle() {
 
   // Create user in the database
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
+    const response = await fetch(`/api/users`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -28,7 +28,7 @@ const ButtonNewMedia = () => {
     
     event.preventDefault();
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/media`, {
+      const response = await fetch(`/api/media`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
