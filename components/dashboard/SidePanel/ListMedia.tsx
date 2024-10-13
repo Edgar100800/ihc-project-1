@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -36,7 +36,7 @@ const handleGetMedia = async (): Promise<SmallMedia[]> => {
   }
 };
 
-function ListMedia() {
+function ListMediaContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [media, setMedia] = useState<SmallMedia[]>([]);
@@ -83,6 +83,14 @@ function ListMedia() {
         </ul>
       )}
     </ScrollArea>
+  );
+}
+
+function ListMedia() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ListMediaContent />
+    </Suspense>
   );
 }
 
