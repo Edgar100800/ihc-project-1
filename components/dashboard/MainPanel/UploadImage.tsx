@@ -1,49 +1,56 @@
-"use client"
-import React, { useState, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
+"use client";
+import React, { useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Upload } from "lucide-react"
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Upload } from "lucide-react";
 
 function UploadImageContent() {
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null)
-  const [title, setTitle] = useState<string | null>(null)
-  const [description, setDescription] = useState<string | null>(null)
-  const [file, setFile] = useState<File | null>(null)
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false) // New state for dialog open/close
-  const searchParams = useSearchParams()
-  const mediaId = searchParams.get('itemId')
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [title, setTitle] = useState<string | null>(null);
+  const [description, setDescription] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false); // New state for dialog open/close
+  const searchParams = useSearchParams();
+  const mediaId = searchParams.get("mediaId");
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files?.[0]
+    const selectedFile = event.target.files?.[0];
     if (selectedFile) {
-      setFile(selectedFile)
-      const reader = new FileReader()
+      setFile(selectedFile);
+      const reader = new FileReader();
       reader.onload = (e) => {
-        setUploadedImage(e.target?.result as string)
-      }
-      reader.readAsDataURL(selectedFile)
+        setUploadedImage(e.target?.result as string);
+      };
+      reader.readAsDataURL(selectedFile);
     }
-  }
+  };
 
   const handleSubmit = async () => {
-    if (!file || !mediaId) return
+    if (!file || !mediaId) return;
 
     try {
       const base64Data = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onload = (e) => resolve(e.target?.result as string)
-        reader.onerror = (e) => reject(e)
-        reader.readAsDataURL(file)
-      })
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target?.result as string);
+        reader.onerror = (e) => reject(e);
+        reader.readAsDataURL(file);
+      });
 
       const response = await fetch(`/api/images`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           mediaId,
@@ -55,20 +62,20 @@ function UploadImageContent() {
           title,
           description,
         }),
-      })
+      });
 
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to upload image')
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to upload image");
       }
 
-      const data = await response.json()
-      console.log('Image uploaded successfully:', data)
-      setIsDialogOpen(false) // Close the dialog on successful upload
+      const data = await response.json();
+      console.log("Image uploaded successfully:", data);
+      setIsDialogOpen(false); // Close the dialog on successful upload
     } catch (error) {
-      console.error('Error uploading image:', error)
+      console.error("Error uploading image:", error);
     }
-  }
+  };
 
   return (
     <div>
@@ -90,7 +97,7 @@ function UploadImageContent() {
             <Input
               id="title"
               type="text"
-              value={title || ''}
+              value={title || ""}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter image title"
             />
@@ -100,23 +107,35 @@ function UploadImageContent() {
             <Input
               id="description"
               type="text"
-              value={description || ''}
+              value={description || ""}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Enter image description"
             />
           </div>
           <div className="grid w-full max-w-sm items-center gap-1.5">
             <Label htmlFor="image-upload">Image</Label>
-            <Input id="image-upload" type="file" accept="image/*" onChange={handleImageUpload} />
+            <Input
+              id="image-upload"
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+            />
           </div>
           {uploadedImage && (
             <div className="mt-4">
               <h3 className="text-lg font-semibold mb-2">Preview:</h3>
-              <img src={uploadedImage} alt="Uploaded" className="w-32 h-32 object-cover rounded-lg" />
+              <img
+                src={uploadedImage}
+                alt="Uploaded"
+                className="w-32 h-32 object-cover rounded-lg"
+              />
               <p className="text-green-500 mt-2">Image ready to upload</p>
             </div>
           )}
-          <Button onClick={handleSubmit} disabled={!file || !title || !description}>
+          <Button
+            onClick={handleSubmit}
+            disabled={!file || !title || !description}
+          >
             Upload
           </Button>
         </DialogContent>
@@ -125,19 +144,26 @@ function UploadImageContent() {
       {uploadedImage && (
         <div className="mt-8">
           <h2 className="text-xl font-semibold mb-2">Uploaded Image:</h2>
-          <img src={uploadedImage} alt="Uploaded" className="max-w-full h-auto rounded-lg shadow-md" />
+          <img
+            src={uploadedImage}
+            alt="Uploaded"
+            className="max-w-full h-auto rounded-lg shadow-md"
+          />
         </div>
       )}
     </div>
-  )
+  );
 }
 
 function UploadImage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <UploadImageContent />
+      <div className="mt-8 w-full flex flex-row items-begin justify-between">
+        <h3 className="text-xl font-semibold ">Upload Image: </h3>
+        <UploadImageContent />
+      </div>
     </Suspense>
-  )
+  );
 }
 
-export default UploadImage
+export default UploadImage;

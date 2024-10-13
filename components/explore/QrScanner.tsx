@@ -1,16 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import jsQR from "jsqr";
-
-interface Image {
-  id: string;
-  media_id: string;
-  url: string;
-  created_at: string;
-  updated_at: string;
-  title?: string;
-  description?: string;
-}
+import { Image } from "@/types/media";
 
 const handleGetMedia = async (mediaId: string): Promise<Image[] | null> => {
   try {

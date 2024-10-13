@@ -27,3 +27,34 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Failed to create media' }, { status: 500 });
   }
 }
+
+export async function DELETE(request: Request) {
+  try {
+    const { id } = await request.json();
+
+    await prisma.media.delete({
+      where: { id }
+    });
+
+    return NextResponse.json({ message: 'Media deleted successfully' }, { status: 200 });
+  } catch (error) {
+    console.error('Error deleting media:', error);
+    return NextResponse.json({ error: 'Failed to delete media' }, { status: 500 });
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    const { id, name } = await request.json();
+
+    const media = await prisma.media.update({
+      where: { id },
+      data: { name }
+    });
+
+    return NextResponse.json(media, { status: 200 });
+  } catch (error) {
+    console.error('Error updating media:', error);
+    return NextResponse.json({ error: 'Failed to update media' }, { status: 500 });
+  }
+}

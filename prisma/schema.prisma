@@ -36,7 +36,7 @@ model Media {
 
 model Image {
   id         String   @id  @default(uuid())
-  media      Media    @relation(fields: [media_id], references: [id])
+  media      Media    @relation(fields: [media_id], references: [id],onDelete: Cascade)
   media_id   String   
   title      String?
   description String?

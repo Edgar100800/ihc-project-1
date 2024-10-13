@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { createClient } from "@/utils/supabase/client";
@@ -14,18 +14,14 @@ const handleGetMedia = async (): Promise<SmallMedia[]> => {
     data: { user },
   } = await supabase.auth.getUser();
   const userid = user?.id;
-  console.log("USER ID: ", userid);
 
   try {
-    const response = await fetch(
-      `/api/media/${userid}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await fetch(`/api/media/${userid}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!response.ok) {
       throw new Error("Failed to get media");
@@ -42,8 +38,10 @@ const handleGetMedia = async (): Promise<SmallMedia[]> => {
 
 function ListMedia() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [media, setMedia] = useState<SmallMedia[]>([]);
   const [loading, setLoading] = useState(true);
+  const selectedmediaId = searchParams.get("mediaId");
 
   useEffect(() => {
     const fetchMedia = async () => {
@@ -57,7 +55,7 @@ function ListMedia() {
   }, []);
 
   const handleItemClick = (id: string) => {
-    router.push(`/dashboard?itemId=${id}`);
+    router.push(`/dashboard?mediaId=${id}`);
   };
 
   return (
@@ -72,7 +70,11 @@ function ListMedia() {
           {media.map((item) => (
             <li
               key={item.id}
-              className="text-sm hover:bg-gray-100 p-2 rounded cursor-pointer"
+              className={`text-sm p-2 rounded cursor-pointer ${
+                item.id === selectedmediaId
+                  ? "bg-black text-white"
+                  : "hover:bg-gray-100"
+              }`}
               onClick={() => handleItemClick(item.id)}
             >
               {item.name}

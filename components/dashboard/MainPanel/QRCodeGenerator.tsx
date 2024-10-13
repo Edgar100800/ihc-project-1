@@ -31,16 +31,19 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ value }) => {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-2">QR Code:</h2>
+      <div className="flex flex-row items-begin justify-between">
+        <h2 className="text-xl font-semibold ">QR Code:</h2>
+      <button
+        onClick={downloadQRCode}
+        className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+        Download QR Code
+      </button>
+        </div>
+
       <div ref={qrWrapperRef}>
         <QRCode value={value} size={256} />
       </div>
-      <button
-        onClick={downloadQRCode}
-        className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Download QR Code
-      </button>
     </div>
   );
 };

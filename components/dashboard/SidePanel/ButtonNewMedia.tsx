@@ -18,15 +18,14 @@ const ButtonNewMedia = () => {
   // };
 
   const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     
     const supabase = createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
     const userid = user?.id;
-    console.log("USER ID: ", userid);
     
-    event.preventDefault();
     try {
       const response = await fetch(`/api/media`, {
         method: 'POST',
