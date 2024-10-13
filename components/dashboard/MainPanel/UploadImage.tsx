@@ -10,7 +10,10 @@ import { Upload } from "lucide-react"
 
 function UploadImageContent() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null)
+  const [title, setTitle] = useState<string | null>(null)
+  const [description, setDescription] = useState<string | null>(null)
   const [file, setFile] = useState<File | null>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false) // New state for dialog open/close
   const searchParams = useSearchParams()
   const mediaId = searchParams.get('itemId')
 
@@ -49,6 +52,8 @@ function UploadImageContent() {
             type: file.type,
             base64Data,
           },
+          title,
+          description,
         }),
       })
 
@@ -59,18 +64,17 @@ function UploadImageContent() {
 
       const data = await response.json()
       console.log('Image uploaded successfully:', data)
-      // You might want to update the UI or state here to reflect the successful upload
+      setIsDialogOpen(false) // Close the dialog on successful upload
     } catch (error) {
       console.error('Error uploading image:', error)
-      // Handle error (e.g., show an error message to the user)
     }
   }
 
   return (
     <div>
-      <Dialog>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
-          <Button>
+          <Button onClick={() => setIsDialogOpen(true)}>
             <Upload className="mr-2 h-4 w-4" /> Upload Image
           </Button>
         </DialogTrigger>
@@ -81,6 +85,26 @@ function UploadImageContent() {
               Choose an image file to upload to your dashboard.
             </DialogDescription>
           </DialogHeader>
+          <div className="grid w-full max-w-sm items-center gap-1.5 mt-4">
+            <Label htmlFor="title">Title</Label>
+            <Input
+              id="title"
+              type="text"
+              value={title || ''}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Enter image title"
+            />
+          </div>
+          <div className="grid w-full max-w-sm items-center gap-1.5 mt-4">
+            <Label htmlFor="description">Description</Label>
+            <Input
+              id="description"
+              type="text"
+              value={description || ''}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter image description"
+            />
+          </div>
           <div className="grid w-full max-w-sm items-center gap-1.5">
             <Label htmlFor="image-upload">Image</Label>
             <Input id="image-upload" type="file" accept="image/*" onChange={handleImageUpload} />
@@ -88,10 +112,13 @@ function UploadImageContent() {
           {uploadedImage && (
             <div className="mt-4">
               <h3 className="text-lg font-semibold mb-2">Preview:</h3>
-              <img src={uploadedImage} alt="Uploaded" className="max-w-full h-auto rounded-lg" />
+              <img src={uploadedImage} alt="Uploaded" className="w-32 h-32 object-cover rounded-lg" />
+              <p className="text-green-500 mt-2">Image ready to upload</p>
             </div>
           )}
-          <Button onClick={handleSubmit} disabled={!file}>Upload</Button>
+          <Button onClick={handleSubmit} disabled={!file || !title || !description}>
+            Upload
+          </Button>
         </DialogContent>
       </Dialog>
 

@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   const supabase = createServerComponentClient({ cookies })
 
   try {
-    const { mediaId, file } = await request.json()
+    const { mediaId, file, title, description } = await request.json()
     const media = await prisma.media.findUnique({ where: { id: mediaId } })
 
     if (!media) {
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
 
     // Create image record in the database
     const image = await prisma.image.create({
-      data: { media_id: mediaId, url: publicUrl },
+      data: {  media_id: mediaId, url: publicUrl, title, description },
     })
 
     return NextResponse.json(image, { status: 201 })

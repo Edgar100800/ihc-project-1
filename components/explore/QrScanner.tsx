@@ -8,6 +8,8 @@ interface Image {
   url: string;
   created_at: string;
   updated_at: string;
+  title?: string;
+  description?: string;
 }
 
 const handleGetMedia = async (mediaId: string): Promise<Image[] | null> => {
@@ -34,6 +36,7 @@ const QRCodeScanner: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const previousQrDataRef = useRef<string | null>(null); // Use a ref to track the previous QR data
   const throttleTimeoutRef = useRef<NodeJS.Timeout | null>(null); // Ref for throttling QR data processing
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -107,6 +110,16 @@ const QRCodeScanner: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (images && images.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+      }, 4000); // Change image every 4 seconds
+
+      return () => clearInterval(interval); // Clean up the interval on component unmount
+    }
+  }, [images]);
+
   return (
     <div style={{ position: "relative", backgroundColor: "black" }} >
       {/* <h2 className="text-xl font-semibold mb-2">QR Code Scanner with Bounding Box</h2> */}
@@ -126,7 +139,11 @@ const QRCodeScanner: React.FC = () => {
       {images && (
         <div>
           {images.map((image) => (
-            <img key={image.id} src={image.url} alt={image.id} className="pt-4" />
+            <div key={image.id} className="bg-gray-800 rounded-lg shadow-md p-4 mb-4">
+              <h3 className="text-lg font-bold text-blue-400 mb-2">{image.title}</h3>
+              <p className="text-sm italic text-gray-300 mb-3">{image.description}</p>
+              <img src={image.url} alt={image.id} className="w-full h-auto rounded-md" />
+            </div>
           ))}
         </div>
       )}
@@ -137,18 +154,18 @@ const QRCodeScanner: React.FC = () => {
         <div
           style={{
             position: "absolute",
-            top: boundingBox.y,
-            left: boundingBox.x,
-            width: boundingBox.width,
-            height: boundingBox.height,
+            top: boundingBox.y - boundingBox.width,
+            left: boundingBox.x - boundingBox.height,
+            width: boundingBox.width * 2,
+            height: boundingBox.height * 2,
             overflow: "hidden",
             pointerEvents: "none", // Ensure it doesn't interfere with scanning
             zIndex: 1000,
           }}
         >
           <img
-            src={images[0].url}
-            alt={images[0].id}
+            src={images[currentImageIndex].url}
+            alt={images[currentImageIndex].id}
             style={{
               width: "100%",
               height: "100%",
