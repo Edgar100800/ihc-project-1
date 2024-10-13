@@ -141,16 +141,6 @@ function UploadImageContent() {
         </DialogContent>
       </Dialog>
 
-      {uploadedImage && (
-        <div className="mt-8">
-          <h2 className="text-xl font-semibold mb-2">Uploaded Image:</h2>
-          <img
-            src={uploadedImage}
-            alt="Uploaded"
-            className="max-w-full h-auto rounded-lg shadow-md"
-          />
-        </div>
-      )}
     </div>
   );
 }

@@ -117,14 +117,22 @@ const QRCodeScanner: React.FC = () => {
       <video ref={videoRef} style={{ width: "100%", height: "auto", maxHeight: "100vh" }} />
       <canvas ref={canvasRef} style={{ display: "none" }} />
 
+      {/* QR Detected Indicator */}
+      {qrData && (
+        <div className="absolute top-2.5 left-2.5 text-[#16ed48] font-bold z-[1000]">
+          QR Detected
+        </div>
+      )}
+
+
       {/* Scanned Data Display */}
       <div className="p-4 text-white">
-      {qrData && (
+      {/* {qrData && (
         <div className="mt-4">
           <h3 className="font-bold">Scanned Data:</h3>
           <p>{qrData}</p>
         </div>
-      )}
+      )} */}
 
       {/* Display Images */}
       {images && (
