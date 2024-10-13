@@ -108,12 +108,13 @@ const QRCodeScanner: React.FC = () => {
   }, []);
 
   return (
-    <div style={{ position: "relative" }}>
-      <h2 className="text-xl font-semibold mb-2">QR Code Scanner with Bounding Box</h2>
-      <video ref={videoRef} style={{ width: "100%", height: "auto" }} />
+    <div style={{ position: "relative", backgroundColor: "black" }} >
+      {/* <h2 className="text-xl font-semibold mb-2">QR Code Scanner with Bounding Box</h2> */}
+      <video ref={videoRef} style={{ width: "100%", height: "auto", maxHeight: "100vh" }} />
       <canvas ref={canvasRef} style={{ display: "none" }} />
 
       {/* Scanned Data Display */}
+      <div className="p-4 text-white">
       {qrData && (
         <div className="mt-4">
           <h3 className="font-bold">Scanned Data:</h3>
@@ -125,10 +126,11 @@ const QRCodeScanner: React.FC = () => {
       {images && (
         <div>
           {images.map((image) => (
-            <img key={image.id} src={image.url} alt={image.id} />
+            <img key={image.id} src={image.url} alt={image.id} className="pt-4" />
           ))}
         </div>
       )}
+      </div>
 
       {/* Render First Image in Bounding Box */}
       {boundingBox && images && images.length > 0 && (
