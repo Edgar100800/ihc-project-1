@@ -42,6 +42,7 @@ function ListMediaContent() {
   const [media, setMedia] = useState<SmallMedia[]>([]);
   const [loading, setLoading] = useState(true);
   const selectedmediaId = searchParams.get("mediaId");
+  const newMedia = searchParams.get("newmedia");
 
   useEffect(() => {
     const fetchMedia = async () => {
@@ -52,7 +53,14 @@ function ListMediaContent() {
     };
 
     fetchMedia();
-  }, []);
+
+    // If newmedia is true, refresh the media list
+    if (newMedia === "true") {
+      fetchMedia();
+      // Remove the newmedia parameter from the URL
+      router.replace("/dashboard?mediaId=" + selectedmediaId);
+    }
+  }, [newMedia, selectedmediaId, router]);
 
   const handleItemClick = (id: string) => {
     router.push(`/dashboard?mediaId=${id}`);

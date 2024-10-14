@@ -13,14 +13,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Upload } from "lucide-react";
+import { Upload, Loader2 } from "lucide-react";
 
 function UploadImageContent() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [title, setTitle] = useState<string | null>(null);
   const [description, setDescription] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false); // New state for dialog open/close
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const mediaId = searchParams.get("mediaId");
 
@@ -38,6 +39,8 @@ function UploadImageContent() {
 
   const handleSubmit = async () => {
     if (!file || !mediaId) return;
+
+    setIsUploading(true);
 
     try {
       const base64Data = await new Promise<string>((resolve, reject) => {
@@ -71,9 +74,17 @@ function UploadImageContent() {
 
       const data = await response.json();
       console.log("Image uploaded successfully:", data);
-      setIsDialogOpen(false); // Close the dialog on successful upload
+      setIsDialogOpen(false);
+      setTitle(null);
+      setDescription(null);
+      setFile(null);
+      setUploadedImage(null);
+      // router.refresh();
+      window.location.reload();
     } catch (error) {
       console.error("Error uploading image:", error);
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -134,13 +145,19 @@ function UploadImageContent() {
           )}
           <Button
             onClick={handleSubmit}
-            disabled={!file || !title || !description}
+            disabled={!file || !title || !description || isUploading}
           >
-            Upload
+            {isUploading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Uploading...
+              </>
+            ) : (
+              "Upload"
+            )}
           </Button>
         </DialogContent>
       </Dialog>
-
     </div>
   );
 }

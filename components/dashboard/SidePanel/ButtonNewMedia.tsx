@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -10,12 +11,9 @@ import { Input } from "@/components/ui/input";
 import { createClient } from "@/utils/supabase/client";
 
 const ButtonNewMedia = () => {
-
   const [name, setName] = useState('');
-
-  // const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setName(e.target.value);
-  // };
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -41,6 +39,12 @@ const ButtonNewMedia = () => {
 
       const data = await response.json();
       console.log('Media created:', data);
+
+      // Close the dialog
+      setIsDialogOpen(false);
+
+      // Refresh the window with the new mediaId in the query
+      router.push(`?mediaId=${data.id}&newmedia=true`);
     } catch (error) {
       console.error('Error creating media:', error);
     }
@@ -48,9 +52,9 @@ const ButtonNewMedia = () => {
 
   return (
     <div className="p-4 border-b">
-      <Dialog>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
-          <Button className="w-full">
+          <Button className="w-full" onClick={() => setIsDialogOpen(true)}>
             <Plus className="mr-2 h-4 w-4" /> Create New
           </Button>
         </DialogTrigger>
@@ -61,7 +65,6 @@ const ButtonNewMedia = () => {
               Add a new item to your dashboard here.
             </DialogDescription>
           </DialogHeader>
-          {/* Add your form or content for creating new items here */}
           <form onSubmit={handleSubmit}>
             <Input
               type="text"
