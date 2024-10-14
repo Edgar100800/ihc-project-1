@@ -60,7 +60,7 @@ function ListMediaContent() {
       // Remove the newmedia parameter from the URL
       router.replace("/dashboard?mediaId=" + selectedmediaId);
     }
-  }, [newMedia, selectedmediaId, router]);
+  }, [newMedia, router]);
 
   const handleItemClick = (id: string) => {
     router.push(`/dashboard?mediaId=${id}`);
